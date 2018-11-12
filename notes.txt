@@ -1,0 +1,11 @@
+Project purpose:
+Implement an MVP Android app using Maps SDK with ATTOM rest API
+
+Project requirements:
+Code in Kotlin
+Use Dagger, RxJava, and retrofit
+
+Short-term goals:
+Add dependencies
+Get ATTOM json printed to logd
+Decide what to do with ATTOM json!
