@@ -30,6 +30,7 @@ class NetworkModule {
                         .request()
                         .newBuilder()
                         .addHeader("apikey", ctx.getString(R.string.attom_api_key))
+                        .addHeader("Accept", "application/json")
                         .build()
 
                 chain.proceed(request)
