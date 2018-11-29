@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/setSearchRadius"
+        android:title="@string/set_search_radius"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/setAvmBounds"
+        android:title="@string/set_avm_bounds"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/about"
+        android:title="@string/about_this_app"
+        app:showAsAction="never" />
+
+</menu>
