@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.jtwaller.attomdemo.network.AttomPropertyResponse
 import com.jtwaller.attomdemo.network.RestApi
+import com.jtwaller.attomdemo.ui.AboutDialogFragment
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -45,6 +47,43 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.setSearchRadius -> {
+                displaySearchRadiusDialog()
+                true
+            }
+            R.id.setAvmBounds -> {
+                displaySetAvmBoundsDialog()
+                true
+            }
+            R.id.about -> {
+                displayAboutDialog()
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun displaySearchRadiusDialog() {
+        Log.d(TAG, ": Show search radius dialog")
+    }
+
+    fun displaySetAvmBoundsDialog() {
+        Log.d(TAG, ": Show avm bounds dialog")
+    }
+
+    fun displayAboutDialog() {
+        val ft = fragmentManager.beginTransaction()
+        val prev = fragmentManager.findFragmentByTag("dialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+
+        AboutDialogFragment().show(ft, "dialog")
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -61,6 +100,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val unionSquare = LatLng(37.8, -122.4)
         mMap.addMarker(MarkerOptions().position(unionSquare).title("Union Square"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(unionSquare))
+
+        callApi()
     }
 
     fun callApi() {
