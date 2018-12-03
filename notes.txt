@@ -9,3 +9,27 @@ Short-term goals:
 Add dependencies
 Get ATTOM json printed to logd
 Decide what to do with ATTOM json!
+
+
+Example API calls:
+
+// "https://search.onboard-apis.com/propertyapi/v1.0.0/avm/detail?address1=11650+ANTWERP+AVE&address2=LOS+ANGELES+CA"
+val resource = "avm"
+val pckg = "detail"
+val params = HashMap<String, String>()
+params.put("address1", "11650 ANTWERP AVE")
+params.put("address2", "LOS ANGELES CA")
+
+
+// https://search.onboard-apis.com/propertyapi/v1.0.0/property/snapshot?latitude=39.296864&longitude=-75.613574&radius=20
+val resource = "avm"
+val pckg = "snapshot"
+val params = HashMap<String, String>()
+params.put("latitude", "37.8")
+params.put("longitude", "-122.4")
+params.put("pageSize", "100")
+params.put("orderBy", "avmValue desc")
+
+
+Misc:
+Distance across SF: 6.8mi
