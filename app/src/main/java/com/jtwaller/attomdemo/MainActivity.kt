@@ -1,5 +1,6 @@
 package com.jtwaller.attomdemo
 
+import android.app.ProgressDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -94,50 +95,64 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+        val unionSquare = LatLng(37.788179, -122.406982)
         mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val unionSquare = LatLng(37.8, -122.4)
         mMap.addMarker(MarkerOptions().position(unionSquare).title("Union Square"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(unionSquare))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(unionSquare, 13f))
 
-        callApi()
+        callApi(unionSquare, 1f)
     }
 
-    fun callApi() {
-        // "https://search.onboard-apis.com/propertyapi/v1.0.0/avm/detail?address1=11650+ANTWERP+AVE&address2=LOS+ANGELES+CA"
+    fun callApi(latLng: LatLng, radius: Float) {
+        // eg https://search.onboard-apis.com/propertyapi/v1.0.0/property/snapshot?latitude=39.296864&longitude=-75.613574&radius=20
         val resource = "avm"
-        val pckg = "detail"
+        val pckg = "snapshot"
         val params = HashMap<String, String>()
-        params.put("address1", "11650 ANTWERP AVE")
-        params.put("address2", "LOS ANGELES CA")
+        params.put("latitude", latLng.latitude.toString())
+        params.put("longitude", latLng.longitude.toString())
+        params.put("pageSize", "100")
+        params.put("orderBy", "avmValue desc")
+        params.put("radius", radius.toString())
 
         restApi.getProperties(resource, pckg, params)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object: Observer<AttomPropertyResponse> {
+
+                    val progressDialog = ProgressDialog(this@MainActivity)
+
+                    init {
+                        progressDialog.isIndeterminate = true
+                        progressDialog.setMessage(getString(R.string.fetching_data))
+                    }
+
                     override fun onNext(t: AttomPropertyResponse) {
                         Log.d(TAG, ": onNext")
                         Log.d(TAG, ": List size: " + t.attomPropertyList.size);
                         for (property in t.attomPropertyList) {
-                            Log.d(TAG, ": " + property.address.line1)
-                            Log.d(TAG, ": " + property.address.line2)
+                            val pos = LatLng(property.location.latitude.toDouble(), property.location.longitude.toDouble())
+                            mMap.addMarker(MarkerOptions().position(pos).title("Union Square"))
+
+//                            Log.d(TAG, ": " + property.address.line1)
+//                            Log.d(TAG, ": " + property.address.line2)
+//                            Log.d(TAG, ": ");
                         }
                     }
 
                     override fun onComplete() {
                         Log.d(TAG, ": onComplete")
+                        progressDialog.dismiss()
                     }
 
                     override fun onSubscribe(d: Disposable) {
                         Log.d(TAG, ": onSubscribe")
+                        progressDialog.show()
                     }
 
                     override fun onError(e: Throwable) {
                         Log.d(TAG, ": onError " + e.localizedMessage)
+                        progressDialog.dismiss()
                     }
                 })
-
     }
-
 }
