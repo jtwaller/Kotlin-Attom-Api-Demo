@@ -3,9 +3,11 @@
     <string name="title_activity_maps">Map</string>
     <string name="fetching_data">Fetching data&#8230;</string>
     <string name="ok">OK</string>
+    <string name="set">Set</string>
     <string name="cancel">Cancel</string>
     <string name="set_search_radius">Set search radius</string>
     <string name="set_avm_bounds">Set AVM boundaries</string>
     <string name="about_this_app">About this app</string>
     <string name="about_modal_text">This demo app polls attomdata.com\'s property api to display the 100 most valuable properties (by AVM) within a given radius.\n\nProperty information is received in json format and plotted with the Android Maps SDK.\n\nUpper and lower boundaries to AVM can be set using the "Set AVM boundaries" option in the overflow menu.</string>
+    <string name="search_radius_text">Set your search radius (in miles)</string>
 </resources>

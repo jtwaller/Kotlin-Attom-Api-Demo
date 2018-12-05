@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.jtwaller.attomdemo.network.AttomPropertyResponse
 import com.jtwaller.attomdemo.network.RestApi
 import com.jtwaller.attomdemo.ui.AboutDialogFragment
+import com.jtwaller.attomdemo.ui.SearchRadiusDialog
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private lateinit var mMap: GoogleMap
+    var searchRadius: Double = 1.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +69,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun displaySearchRadiusDialog() {
-        Log.d(TAG, ": Show search radius dialog")
+        val ft = fragmentManager.beginTransaction()
+        val prev = fragmentManager.findFragmentByTag("dialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+
+        SearchRadiusDialog().show(ft, "dialog")
     }
 
     fun displaySetAvmBoundsDialog() {
@@ -100,10 +109,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.addMarker(MarkerOptions().position(unionSquare).title("Union Square"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(unionSquare, 13f))
 
-        callApi(unionSquare, 1f)
+        callApi(unionSquare, 1.0)
     }
 
-    fun callApi(latLng: LatLng, radius: Float) {
+    fun callApi(latLng: LatLng, radius: Double) {
         // eg https://search.onboard-apis.com/propertyapi/v1.0.0/property/snapshot?latitude=39.296864&longitude=-75.613574&radius=20
         val resource = "avm"
         val pckg = "snapshot"
