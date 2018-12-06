@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.*
 import com.jtwaller.attomdemo.network.AttomPropertyResponse
 import com.jtwaller.attomdemo.network.RestApi
 import com.jtwaller.attomdemo.ui.AboutDialogFragment
+import com.jtwaller.attomdemo.ui.DialogType
 import com.jtwaller.attomdemo.ui.SearchRadiusDialog
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -56,22 +57,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.setSearchRadius -> {
-                displaySearchRadiusDialog()
+                displayDialog(DialogType.SEARCH_RADIUS)
                 true
             }
             R.id.setAvmBounds -> {
-                displaySetAvmBoundsDialog()
+                displayDialog(DialogType.AVM_BOUNDARIES)
                 true
             }
             R.id.about -> {
-                displayAboutDialog()
+                displayDialog(DialogType.ABOUT)
                 true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
-    fun displaySearchRadiusDialog() {
+    fun displayDialog(dialog: DialogType) {
         val ft = fragmentManager.beginTransaction()
         val prev = fragmentManager.findFragmentByTag("dialog")
         if (prev != null) {
@@ -79,22 +80,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         ft.addToBackStack(null)
 
-        SearchRadiusDialog().show(ft, "dialog")
-    }
-
-    fun displaySetAvmBoundsDialog() {
-        Log.d(TAG, ": Show avm bounds dialog")
-    }
-
-    fun displayAboutDialog() {
-        val ft = fragmentManager.beginTransaction()
-        val prev = fragmentManager.findFragmentByTag("dialog")
-        if (prev != null) {
-            ft.remove(prev)
+        // Was hoping to use a switch here, need to learn more about Kotlin "when"
+        if (dialog == DialogType.ABOUT) {
+            AboutDialogFragment().show(ft, "dialog")
+        } else if (dialog == DialogType.SEARCH_RADIUS) {
+            SearchRadiusDialog().show(ft, "dialog")
+        } else if (dialog == DialogType.AVM_BOUNDARIES) {
+            Log.d(TAG, ": Show avm bounds dialog")
+        } else {
+            throw IllegalStateException("Invalid dialog type")
         }
-        ft.addToBackStack(null)
-
-        AboutDialogFragment().show(ft, "dialog")
     }
 
     fun updateSearchRadius(radius: Double) {
