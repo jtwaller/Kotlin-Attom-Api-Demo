@@ -23,7 +23,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     @Inject
     lateinit var restApi: RestApi
@@ -108,7 +108,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.setOnMarkerDragListener(this)
 
+        initMap()
+    }
+
+    override fun onMarkerDragStart(p0: Marker) {
+        // nil
+    }
+
+    override fun onMarkerDrag(p0: Marker) {
+        // nil
+    }
+
+    override fun onMarkerDragEnd(p0: Marker) {
+        searchCenter = p0.position
         initMap()
     }
 
@@ -117,6 +131,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         searchCenterMarker = mMap.addMarker(MarkerOptions()
                 .position(searchCenter)
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.target))
+                .anchor(0.5f, 0.5f)
         )
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchCenter, 13f))
@@ -126,7 +143,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 .radius(searchRadius.milesToMeters())
                 .strokeColor(Color.BLUE)
         )
-
 //        callApi(searchCenter, searchRadius)
     }
 
