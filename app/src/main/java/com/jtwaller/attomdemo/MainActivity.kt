@@ -143,6 +143,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.target))
                 .anchor(0.5f, 0.5f)
+                .zIndex(1.0f)
         )
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchCenter, 13f))
