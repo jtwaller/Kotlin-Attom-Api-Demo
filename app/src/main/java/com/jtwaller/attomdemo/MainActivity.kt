@@ -1,6 +1,7 @@
 package com.jtwaller.attomdemo
 
 import android.app.ProgressDialog
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,8 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.jtwaller.attomdemo.network.AttomPropertyResponse
 import com.jtwaller.attomdemo.network.RestApi
 import com.jtwaller.attomdemo.ui.AboutDialogFragment
@@ -32,7 +32,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private lateinit var mMap: GoogleMap
-    var searchRadius: Double = 1.0
+    private lateinit var searchCenterMarker: Marker
+
+    var searchCenter = LatLng(37.788179, -122.406982) // Union Square
+    var searchRadius: Double = 1.0 // Radius in miles
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +97,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         AboutDialogFragment().show(ft, "dialog")
     }
 
+    fun updateSearchRadius(radius: Double) {
+        searchRadius = radius
+        initMap()
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -104,12 +112,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        val unionSquare = LatLng(37.788179, -122.406982)
         mMap = googleMap
-        mMap.addMarker(MarkerOptions().position(unionSquare).title("Union Square"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(unionSquare, 13f))
 
-        callApi(unionSquare, 1.0)
+        initMap()
+    }
+
+    fun initMap() {
+        mMap.clear()
+
+        searchCenterMarker = mMap.addMarker(MarkerOptions()
+                .position(searchCenter)
+        )
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchCenter, 13f))
+
+        mMap.addCircle(CircleOptions()
+                .center(searchCenter)
+                .radius(searchRadius.milesToMeters())
+                .strokeColor(Color.BLUE)
+        )
+
+//        callApi(searchCenter, searchRadius)
     }
 
     fun callApi(latLng: LatLng, radius: Double) {

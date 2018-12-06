@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.search_radius_dialog.view.*
 
 class SearchRadiusDialog: DialogFragment() {
 
-    var searchRadius = 1.0
     val minRadius = .5
     val maxRadius = 3
 
@@ -24,12 +23,15 @@ class SearchRadiusDialog: DialogFragment() {
                 throw IllegalStateException("Dialog cannot be created outside of MainActivity")
             }
 
+            // Is this horrible?
+            var searchRadius = (activity as MainActivity).searchRadius
             val builder = AlertDialog.Builder(it)
 
             val view = activity.layoutInflater.inflate(R.layout.search_radius_dialog, null)
 
             view.radius_seek_bar.progress =
                     (100 * (searchRadius - minRadius) / (maxRadius - minRadius)).toInt()
+            view.radius_value_text.text = searchRadius.format(2)
 
             view.radius_seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -49,7 +51,8 @@ class SearchRadiusDialog: DialogFragment() {
             builder.setView(view)
                     .setPositiveButton(R.string.set,
                             DialogInterface.OnClickListener { dialog, id ->
-                                // Dismiss
+                                // Is this horrible?
+                                (activity as MainActivity).updateSearchRadius(searchRadius)
                             })
                     .setNegativeButton(R.string.cancel,
                             DialogInterface.OnClickListener { dialog, id ->
