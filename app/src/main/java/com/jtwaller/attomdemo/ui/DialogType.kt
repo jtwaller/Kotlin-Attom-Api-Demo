@@ -5,4 +5,5 @@ enum class DialogType {
     ABOUT,
     SEARCH_RADIUS,
     AVM_BOUNDARIES,
+    INSTRUCTIONS
 }

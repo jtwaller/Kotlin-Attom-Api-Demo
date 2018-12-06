@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/instructions"
+        android:title="@string/instructions"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/setSearchRadius"
         android:title="@string/set_search_radius"
         app:showAsAction="never" />

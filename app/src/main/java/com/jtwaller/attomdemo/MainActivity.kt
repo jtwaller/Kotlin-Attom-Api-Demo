@@ -16,6 +16,7 @@ import com.jtwaller.attomdemo.network.AttomPropertyResponse
 import com.jtwaller.attomdemo.network.RestApi
 import com.jtwaller.attomdemo.ui.AboutDialogFragment
 import com.jtwaller.attomdemo.ui.DialogType
+import com.jtwaller.attomdemo.ui.InstructionsDialogFragment
 import com.jtwaller.attomdemo.ui.SearchRadiusDialog
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,6 +35,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private lateinit var mMap: GoogleMap
     private lateinit var searchCenterMarker: Marker
+
+    var firstLaunch = true
 
     var searchCenter = LatLng(37.788179, -122.406982) // Union Square
     var searchRadius: Double = 1.0 // Radius in miles
@@ -68,6 +71,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 displayDialog(DialogType.ABOUT)
                 true
             }
+            R.id.instructions -> {
+                displayDialog(DialogType.INSTRUCTIONS)
+                true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -87,6 +94,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             SearchRadiusDialog().show(ft, "dialog")
         } else if (dialog == DialogType.AVM_BOUNDARIES) {
             Log.d(TAG, ": Show avm bounds dialog")
+        } else if (dialog == DialogType.INSTRUCTIONS) {
+            InstructionsDialogFragment().show(ft, "dialog")
         } else {
             throw IllegalStateException("Invalid dialog type")
         }
@@ -185,6 +194,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     override fun onComplete() {
                         Log.d(TAG, ": onComplete")
                         progressDialog.dismiss()
+
+                        if (firstLaunch) {
+                            displayDialog(DialogType.INSTRUCTIONS)
+                            firstLaunch = false
+                        }
                     }
 
                     override fun onSubscribe(d: Disposable) {
