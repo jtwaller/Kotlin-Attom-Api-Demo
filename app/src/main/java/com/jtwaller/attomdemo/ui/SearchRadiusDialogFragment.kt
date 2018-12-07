@@ -11,7 +11,7 @@ import com.jtwaller.attomdemo.R
 import com.jtwaller.attomdemo.format
 import kotlinx.android.synthetic.main.search_radius_dialog.view.*
 
-class SearchRadiusDialog: DialogFragment() {
+class SearchRadiusDialogFragment: DialogFragment() {
 
     val minRadius = .5
     val maxRadius = 3

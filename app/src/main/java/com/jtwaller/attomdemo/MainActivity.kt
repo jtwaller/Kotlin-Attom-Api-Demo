@@ -17,7 +17,7 @@ import com.jtwaller.attomdemo.network.RestApi
 import com.jtwaller.attomdemo.ui.AboutDialogFragment
 import com.jtwaller.attomdemo.ui.DialogType
 import com.jtwaller.attomdemo.ui.InstructionsDialogFragment
-import com.jtwaller.attomdemo.ui.SearchRadiusDialog
+import com.jtwaller.attomdemo.ui.SearchRadiusDialogFragment
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         if (dialog == DialogType.ABOUT) {
             AboutDialogFragment().show(ft, "dialog")
         } else if (dialog == DialogType.SEARCH_RADIUS) {
-            SearchRadiusDialog().show(ft, "dialog")
+            SearchRadiusDialogFragment().show(ft, "dialog")
         } else if (dialog == DialogType.AVM_BOUNDARIES) {
             Log.d(TAG, ": Show avm bounds dialog")
         } else if (dialog == DialogType.INSTRUCTIONS) {
